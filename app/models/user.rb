@@ -17,6 +17,7 @@ class User < ApplicationRecord
   #   :uniqueness => { :case_sensitive => false },
   # })
 
+  has_many(:comments, {:foreign_key => "author_id", :class_name => "Comment"})
   # def comments
   #   my_id = self.id
 
@@ -25,6 +26,7 @@ class User < ApplicationRecord
   #   return matching_comments
   # end
 
+  has_many(:own_photos, {:foreign_key => :owner_id, :class_name => "Photo"})
   # def own_photos
   #   my_id = self.id
 
@@ -33,6 +35,7 @@ class User < ApplicationRecord
   #   return matching_photos
   # end
 
+  has_many(:likes, {:foreign_key => :fan_id, :class_name => "Like"})
   # def likes
   #   my_id = self.id
 
@@ -41,6 +44,7 @@ class User < ApplicationRecord
   #   return matching_likes
   # end
 
+  has_many(:liked_photos, {:through => :likes, :source => :photo})
   # def liked_photos
   #   my_likes = self.likes
     
@@ -55,6 +59,7 @@ class User < ApplicationRecord
   #   return matching_photos
   # end
 
+  has_many(:commented_photos, {:through => :comments, :source => :photo})
   # def commented_photos
   #   my_comments = self.comments
     
@@ -71,6 +76,7 @@ class User < ApplicationRecord
   #   return unique_matching_photos
   # end
 
+  has_many(:sent_follow_requests, {:foreign_key => :sender_id, :class_name => "FollowRequest"})
   # def sent_follow_requests
   #   my_id = self.id
 
@@ -79,6 +85,8 @@ class User < ApplicationRecord
   #   return matching_follow_requests
   # end
 
+
+  has_many(:received_follow_requests, {:foreign_key => "recipient_id", :class_name => "FollowRequest"})
   # def received_follow_requests
   #   my_id = self.id
 
@@ -87,6 +95,7 @@ class User < ApplicationRecord
   #   return matching_follow_requests
   # end
 
+  has_many(:accepted_sent_follow_requests, -> { where status: "accepted"}, {:foreign_key => :sender_id, :class_name => "FollowRequest"})
   # def accepted_sent_follow_requests
   #   my_sent_follow_requests = self.sent_follow_requests
 
@@ -94,6 +103,8 @@ class User < ApplicationRecord
 
   #   return matching_follow_requests
   # end
+
+  has_many(:accepted_received_follow_requests, -> { where status: "accepted"}, {:foreign_key => :recipient_id, :class_name => "FollowRequest"})
 
   # def accepted_received_follow_requests
   #   my_received_follow_requests = self.received_follow_requests
@@ -103,6 +114,7 @@ class User < ApplicationRecord
   #   return matching_follow_requests
   # end
 
+  has_many(:followers, {:through => :accepted_received_follow_requests, :source => :sender})
   # def followers
   #   my_accepted_received_follow_requests = self.accepted_received_follow_requests
     
@@ -163,7 +175,6 @@ class User < ApplicationRecord
   #   end
 
   #   matching_photos = Photo.where({ :id => array_of_photo_ids })
-
   #   return matching_photos
   # end
 end

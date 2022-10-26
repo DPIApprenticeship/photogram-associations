@@ -15,6 +15,7 @@
 class Photo < ApplicationRecord
   # validates(:poster, { :presence => true })
 
+  belongs_to(:poster, {:foreign_key => :owner_id, :class_name => "User"})
   # def poster
   #   my_owner_id = self.owner_id
 
@@ -25,6 +26,7 @@ class Photo < ApplicationRecord
   #   return the_user
   # end
 
+  has_many(:comments)
   # def comments
   #   my_id = self.id
 
@@ -33,6 +35,7 @@ class Photo < ApplicationRecord
   #   return matching_comments
   # end
 
+  has_many(:likes)
   # def likes
   #   my_id = self.id
 
@@ -41,6 +44,7 @@ class Photo < ApplicationRecord
   #   return matching_likes
   # end
 
+  has_many(:fans, {:through => :likes, :source => :photo})
   # def fans
   #   my_likes = self.likes
     

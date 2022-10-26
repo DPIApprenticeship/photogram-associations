@@ -16,6 +16,7 @@ class Like < ApplicationRecord
   #   :uniqueness => { :scope => [:fan_id] }
   # })
 
+  belongs_to(:fan, {:foreign_key => "fan_id", :class_name => "User"})
   # def fan
   #   my_fan_id = self.fan_id
 
@@ -26,6 +27,7 @@ class Like < ApplicationRecord
   #   return the_user
   # end
 
+  belongs_to(:photo)
   # def photo
   #   my_photo_id = self.photo_id
 
